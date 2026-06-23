@@ -98,7 +98,7 @@ button, input, textarea, a, .nav-links li, .file-drop-area, .copy-btn {
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.4s ease;
     font-size: 0.85rem;
     color: var(--text-muted);
     border-radius: var(--radius);
@@ -132,8 +132,8 @@ button, input, textarea, a, .nav-links li, .file-drop-area, .copy-btn {
 
 .tool-section {
     opacity: 0;
-    transition: opacity 0.25s ease;
-    animation: fadeIn 0.3s forwards;
+    transition: opacity 0.5s ease;
+    animation: fadeIn 0.6s forwards;
 }
 
 .tool-section.hidden {
@@ -184,7 +184,7 @@ textarea {
     font-family: var(--font-mono);
     font-size: 0.85rem;
     outline: none;
-    transition: border-color 0.15s ease;
+    transition: border-color 0.4s ease;
 }
 
 input:focus, textarea:focus {
@@ -200,7 +200,7 @@ button {
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.15s ease;
+    transition: all 0.4s ease;
 }
 
 button:hover {

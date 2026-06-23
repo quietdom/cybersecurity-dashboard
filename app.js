@@ -270,7 +270,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnRefreshProcs = document.getElementById('btn-refresh-procs');
     const procSearch = document.getElementById('proc-search');
     let allProcesses = [];
+    const suspiciousList = ['nmap.exe', 'wireshark.exe', 'nc.exe', 'netcat.exe', 'mimikatz.exe', 'psexec.exe', 'cmd.exe', 'powershell.exe'];
     
+    // Expose globally for inline onclick attribute
+    window.killProc = async (pid) => {
+        if (!confirm('Are you sure you want to forcibly terminate process PID: ' + pid + '?')) return;
+        if (!window.electronAPI) return;
+        const res = await window.electronAPI.killProcess(pid);
+        if (res.success) {
+            alert('Process ' + pid + ' terminated successfully.');
+            if (btnRefreshProcs) btnRefreshProcs.click();
+        } else {
+            alert('Failed to terminate process: ' + res.error);
+        }
+    };
+
     if (btnRefreshProcs) {
         const renderTable = (filter = '') => {
             const tbody = document.querySelector('#proc-table tbody');
@@ -278,26 +292,38 @@ document.addEventListener('DOMContentLoaded', () => {
             const filtered = allProcesses.filter(p => p.name.toLowerCase().includes(filter.toLowerCase()) || p.pid.includes(filter));
             
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center">No processes found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center">No processes found.</td></tr>`;
                 return;
             }
 
             filtered.forEach(p => {
+                const isSuspicious = suspiciousList.includes(p.name.toLowerCase());
+                const nameHtml = isSuspicious 
+                    ? `<span style="color: var(--text-alert); font-weight: bold;">${p.name} <span class="badge badge-alert">Suspicious</span></span>`
+                    : p.name;
+
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${p.pid}</td><td>${p.name}</td><td>${p.memory}</td>`;
+                tr.innerHTML = `
+                    <td>${p.pid}</td>
+                    <td>${nameHtml}</td>
+                    <td>${p.memory}</td>
+                    <td>
+                        <button class="primary-btn" style="padding: 4px 8px; font-size: 0.7rem; background-color: var(--text-alert);" onclick="window.killProc('${p.pid}')">Kill</button>
+                    </td>
+                `;
                 tbody.appendChild(tr);
             });
         };
 
         btnRefreshProcs.addEventListener('click', async () => {
             if (!window.electronAPI) return;
-            document.querySelector('#proc-table tbody').innerHTML = `<tr><td colspan="3" class="text-center">Fetching processes...</td></tr>`;
+            document.querySelector('#proc-table tbody').innerHTML = `<tr><td colspan="4" class="text-center">Fetching processes...</td></tr>`;
             const res = await window.electronAPI.getProcesses();
             if (res.success) {
                 allProcesses = res.processes;
                 renderTable(procSearch.value);
             } else {
-                document.querySelector('#proc-table tbody').innerHTML = `<tr><td colspan="3" class="text-center"><span class="badge badge-alert">Error</span> ${res.error}</td></tr>`;
+                document.querySelector('#proc-table tbody').innerHTML = `<tr><td colspan="4" class="text-center"><span class="badge badge-alert">Error</span> ${res.error}</td></tr>`;
             }
         });
 

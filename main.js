@@ -202,6 +202,19 @@ ipcMain.handle('get-processes', async () => {
     });
 });
 
+ipcMain.handle('kill-process', async (event, pid) => {
+    return new Promise((resolve) => {
+        if (process.platform !== 'win32') return resolve({ success: false, error: 'Only supported on Windows.' });
+        // Make sure PID is numeric to avoid command injection
+        if (!/^\d+$/.test(pid)) return resolve({ success: false, error: 'Invalid PID.' });
+        
+        child_process.exec(`taskkill /F /PID ${pid}`, (error, stdout) => {
+            if (error) return resolve({ success: false, error: error.message });
+            resolve({ success: true, output: stdout });
+        });
+    });
+});
+
 // --- Cryptography Module (AES-256-GCM) ---
 ipcMain.handle('encrypt-text', (event, { text, password }) => {
     try {
