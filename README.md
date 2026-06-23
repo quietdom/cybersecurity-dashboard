@@ -15,19 +15,9 @@ CyberShield was developed to demonstrate the practical application of systems-le
 
 ---
 
-## 📸 Screenshots
+## 📸 Dashboard
 
-> *[Insert a high-quality screenshot of the Main Dashboard showing the Live CPU/RAM graph]*
->
-> *[Insert a screenshot of the File Integrity Monitor analyzing a file]*
-
----
-
-## 🎥 Demo Video
-
-> **Watch CyberShield in action:**
-> 
-> *[Insert link to YouTube demo or attach a `.gif` of the application running here]*
+![Dashboard](dashboard.png)
 
 ---
 

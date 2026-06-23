@@ -135,7 +135,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         pwdLeakStatus.innerHTML = `<span class="badge badge-safe">Secure</span> No known data breaches found.`;
                     }
                 } else {
-                    pwdLeakStatus.innerHTML = `Error checking leaks: ${res.error}`;
+                    const errorMsg = res.error.includes('ENOTFOUND') 
+                        ? 'Network error: Cannot reach the leak database. Check your internet connection.' 
+                        : res.error;
+                    pwdLeakStatus.innerHTML = `<span class="badge badge-alert">Error</span> ${errorMsg}`;
                 }
             }, 800); // debounce
         }
