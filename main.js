@@ -5,6 +5,7 @@ const fs = require('fs');
 const child_process = require('child_process');
 const os = require('os');
 const https = require('https');
+const net = require('net');
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
@@ -147,6 +148,56 @@ ipcMain.handle('network-scan', async (event, targetIp) => {
                 return;
             }
             resolve({ success: true, output: stdout });
+        });
+    });
+});
+
+ipcMain.handle('port-scan', async (event, { targetIp, ports }) => {
+    return new Promise((resolve) => {
+        const results = [];
+        let completed = 0;
+        
+        if (!ports || ports.length === 0) return resolve({ success: true, results: [] });
+
+        ports.forEach(port => {
+            const socket = new net.Socket();
+            let status = 'closed';
+            socket.setTimeout(1500);
+            
+            socket.on('connect', () => { status = 'open'; socket.destroy(); });
+            socket.on('timeout', () => { status = 'timeout'; socket.destroy(); });
+            socket.on('error', () => { socket.destroy(); });
+            socket.on('close', () => {
+                results.push({ port, status });
+                completed++;
+                if (completed === ports.length) resolve({ success: true, results });
+            });
+            socket.connect(port, targetIp);
+        });
+    });
+});
+
+ipcMain.handle('get-processes', async () => {
+    return new Promise((resolve) => {
+        if (process.platform !== 'win32') return resolve({ success: false, error: 'Only supported on Windows.' });
+        
+        child_process.exec('tasklist /FO CSV', (error, stdout) => {
+            if (error) return resolve({ success: false, error: error.message });
+            
+            const lines = stdout.split('\n');
+            const processes = [];
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+                const parts = lines[i].split('","');
+                if (parts.length >= 5) {
+                    processes.push({
+                        name: parts[0].replace(/"/g, ''),
+                        pid: parts[1].replace(/"/g, ''),
+                        memory: parts[4].replace(/"/g, '')
+                    });
+                }
+            }
+            resolve({ success: true, processes });
         });
     });
 });

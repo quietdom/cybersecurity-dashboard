@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CyberShield</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,16 +22,28 @@
                     <i class="fa-solid fa-house"></i> Home
                 </li>
                 <li data-target="password-checker">
-                    <i class="fa-solid fa-key"></i> Password Checker
+                    <i class="fa-solid fa-key"></i> Password Leak Check
                 </li>
                 <li data-target="file-hasher">
-                    <i class="fa-solid fa-file-shield"></i> File Hash Checker
+                    <i class="fa-solid fa-file-shield"></i> File Integrity
                 </li>
                 <li data-target="url-checker">
-                    <i class="fa-solid fa-link"></i> URL Safety Checker
+                    <i class="fa-solid fa-link"></i> URL Safety
                 </li>
                 <li data-target="network-scanner">
-                    <i class="fa-solid fa-network-wired"></i> Network Info
+                    <i class="fa-solid fa-network-wired"></i> Network Diags
+                </li>
+                <li data-target="port-scanner">
+                    <i class="fa-solid fa-satellite-dish"></i> TCP Port Scanner
+                </li>
+                <li data-target="process-monitor">
+                    <i class="fa-solid fa-microchip"></i> Process Monitor
+                </li>
+                <li data-target="email-analyzer">
+                    <i class="fa-solid fa-envelope-open-text"></i> Email Analyzer
+                </li>
+                <li data-target="steganography">
+                    <i class="fa-solid fa-image"></i> Steganography
                 </li>
                 <li data-target="encryption-tool">
                     <i class="fa-solid fa-lock"></i> Encryption Tool
@@ -48,33 +60,6 @@
                     <h1>Welcome to CyberShield</h1>
                     <p>Personal Security Monitoring System.</p>
                 </header>
-                <div class="cards-grid">
-                    <div class="feature-card" onclick="document.querySelector('[data-target=\'password-checker\']').click()">
-                        <i class="fa-solid fa-key"></i>
-                        <h3>Password Checker</h3>
-                        <p>Analyze the strength and vulnerability of your passwords.</p>
-                    </div>
-                    <div class="feature-card" onclick="document.querySelector('[data-target=\'file-hasher\']').click()">
-                        <i class="fa-solid fa-file-shield"></i>
-                        <h3>File Hash Checker</h3>
-                        <p>Verify file integrity securely within your browser.</p>
-                    </div>
-                    <div class="feature-card" onclick="document.querySelector('[data-target=\'url-checker\']').click()">
-                        <i class="fa-solid fa-link"></i>
-                        <h3>URL Safety</h3>
-                        <p>Analyze links for potential phishing or malicious intent.</p>
-                    </div>
-                    <div class="feature-card" onclick="document.querySelector('[data-target=\'network-scanner\']').click()">
-                        <i class="fa-solid fa-network-wired"></i>
-                        <h3>Network Info</h3>
-                        <p>Check your public footprint and network configuration.</p>
-                    </div>
-                    <div class="feature-card" onclick="document.querySelector('[data-target=\'encryption-tool\']').click()">
-                        <i class="fa-solid fa-lock"></i>
-                        <h3>Encryption Tool</h3>
-                        <p>Encrypt and decrypt sensitive text securely.</p>
-                    </div>
-                </div>
                 <div class="chart-container">
                     <canvas id="liveSystemChart"></canvas>
                 </div>
@@ -114,8 +99,8 @@
                     </div>
                     <div class="file-drop-area" id="file-drop-area">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
-                        <p>Drag & Drop a file here or <span>Browse</span></p>
-                        <input type="file" id="file-input" class="hidden-input">
+                        <p>Drag & Drop a file here or <span style="color: var(--accent-primary);">Browse</span></p>
+                        <input type="file" id="file-input" class="hidden-input" style="display:none;">
                     </div>
                     <div class="results hidden" id="hash-results">
                         <div class="file-info">
@@ -166,31 +151,133 @@
             <!-- Network Info Section -->
             <section id="network-scanner" class="tool-section glass-panel hidden">
                 <header class="section-header">
-                    <h1>Network Information</h1>
-                    <p>View your public network footprint and browser details.</p>
-                    <div class="alert alert-info">
-                        <i class="fa-solid fa-circle-info"></i> Browser security prevents direct local network scanning. Displaying public and environment info.
-                    </div>
+                    <h1>Network Diagnostics</h1>
+                    <p>View your public network footprint and execute local ping sweeps.</p>
                 </header>
                 <div class="tool-body">
-                    <button id="btn-fetch-network" class="primary-btn">Fetch My Information</button>
-                    <div class="results hidden" id="network-results">
+                    <button id="btn-fetch-network" class="primary-btn" style="margin-bottom: 15px;">Run Local Ping Sweep (Subnet)</button>
+                    <div class="results" id="network-results">
+                        <div class="input-group">
+                            <input type="text" id="ping-target" placeholder="Enter IP (e.g. 8.8.8.8) or Domain" value="1.1.1.1">
+                            <button id="exec-ping" class="primary-btn">PING</button>
+                        </div>
+                        <div id="net-terminal" class="terminal-output">Waiting for command...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TCP Port Scanner Section -->
+            <section id="port-scanner" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>TCP Port Scanner</h1>
+                    <p>Scan a target IP or domain for common open TCP ports.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="input-group">
+                        <input type="text" id="scan-target" placeholder="Target IP or Domain (e.g. 127.0.0.1)" value="127.0.0.1">
+                        <input type="text" id="scan-ports" placeholder="Ports (e.g. 22,80,443)" value="21,22,23,25,53,80,110,135,139,143,443,445,3389">
+                        <button id="btn-run-scan" class="primary-btn">Scan</button>
+                    </div>
+                    <div class="results hidden" id="scan-results">
+                        <div id="scan-terminal" class="terminal-output"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Process Monitor Section -->
+            <section id="process-monitor" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>Endpoint Process Monitor</h1>
+                    <p>Monitor running system processes and their memory consumption.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="input-group">
+                        <button id="btn-refresh-procs" class="primary-btn">Refresh Process List</button>
+                        <input type="text" id="proc-search" placeholder="Filter processes...">
+                    </div>
+                    <div class="results" id="proc-results">
+                        <div class="table-container">
+                            <table class="data-table" id="proc-table">
+                                <thead>
+                                    <tr>
+                                        <th>PID</th>
+                                        <th>Process Name</th>
+                                        <th>Memory Usage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td colspan="3" class="text-center">Click refresh to load.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Analyzer Section -->
+            <section id="email-analyzer" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>Email Header Analyzer</h1>
+                    <p>Parse raw email headers to analyze routing hops and verify SPF, DKIM, and DMARC alignment.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="input-group">
+                        <textarea id="email-headers-input" placeholder="Paste raw email headers here..." rows="8"></textarea>
+                    </div>
+                    <button id="btn-analyze-email" class="primary-btn">Analyze Headers</button>
+                    
+                    <div class="results hidden" id="email-results">
                         <div class="info-grid">
                             <div class="info-box">
-                                <label>Public IP Address</label>
-                                <span id="net-ip">Loading...</span>
+                                <label>SPF Alignment</label>
+                                <span id="email-spf">N/A</span>
                             </div>
                             <div class="info-box">
-                                <label>ISP / Organization</label>
-                                <span id="net-isp">Loading...</span>
+                                <label>DKIM Alignment</label>
+                                <span id="email-dkim">N/A</span>
                             </div>
                             <div class="info-box">
-                                <label>Location</label>
-                                <span id="net-location">Loading...</span>
+                                <label>DMARC Alignment</label>
+                                <span id="email-dmarc">N/A</span>
                             </div>
-                            <div class="info-box">
-                                <label>User Agent</label>
-                                <span id="net-ua">Loading...</span>
+                        </div>
+                        <div id="email-terminal" class="terminal-output" style="margin-top:15px;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Steganography Section -->
+            <section id="steganography" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>Steganography Tool</h1>
+                    <p>Hide secret text within the Least Significant Bits (LSB) of an image.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-steg-tab="encode">Encode Message</button>
+                        <button class="tab-btn" data-steg-tab="decode">Decode Message</button>
+                    </div>
+                    
+                    <div class="file-drop-area" id="steg-drop-area" style="margin-bottom:15px;">
+                        <i class="fa-solid fa-image"></i>
+                        <p>Select a Base Image (PNG/JPG)</p>
+                        <input type="file" id="steg-file-input" accept="image/*" class="hidden-input" style="display:none;">
+                    </div>
+                    <canvas id="steg-canvas" style="display:none;"></canvas>
+
+                    <div class="tab-content" id="steg-encode-tab">
+                        <div class="input-group">
+                            <textarea id="steg-secret-msg" placeholder="Enter secret message to hide..." rows="3"></textarea>
+                        </div>
+                        <button id="btn-steg-encode" class="primary-btn">Encode & Download Image</button>
+                    </div>
+
+                    <div class="tab-content hidden" id="steg-decode-tab">
+                        <button id="btn-steg-decode" class="primary-btn">Extract Hidden Message</button>
+                        <div class="results hidden" id="steg-decode-results" style="margin-top:15px;">
+                            <label>Extracted Message:</label>
+                            <div class="hash-value-container">
+                                <code id="steg-output" class="hash-code"></code>
                             </div>
                         </div>
                     </div>
@@ -201,7 +288,7 @@
             <section id="encryption-tool" class="tool-section glass-panel hidden">
                 <header class="section-header">
                     <h1>Secure Text Encryption</h1>
-                    <p>Encrypt and decrypt messages using AES-GCM encryption entirely within your browser.</p>
+                    <p>Encrypt and decrypt messages using AES-256-GCM encryption.</p>
                 </header>
                 <div class="tool-body">
                     <div class="tabs">

@@ -6,7 +6,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   
   // Expose network and system diagnostic capabilities
   networkScan: (targetIp) => ipcRenderer.invoke('network-scan', targetIp),
+  portScan: (targetIp, ports) => ipcRenderer.invoke('port-scan', { targetIp, ports }),
   getSystemStats: () => ipcRenderer.invoke('get-system-stats'),
+  getProcesses: () => ipcRenderer.invoke('get-processes'),
   checkPasswordLeak: (password) => ipcRenderer.invoke('check-password-leak', password),
   
   // Expose cryptography capabilities
