@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const child_process = require('child_process');
 const os = require('os');
+const https = require('https');
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
@@ -67,6 +68,65 @@ ipcMain.handle('hash-file', async (event) => {
     } catch (err) {
         return { success: false, error: err.message };
     }
+});
+
+// --- System Telemetry Module (CPU/RAM) ---
+let previousCpuInfo = os.cpus();
+ipcMain.handle('get-system-stats', () => {
+    const cpus = os.cpus();
+    let user = 0, sys = 0, idle = 0;
+    let totalActive = 0, totalIdle = 0;
+
+    for (let i = 0; i < cpus.length; i++) {
+        const cpu = cpus[i].times;
+        const prevCpu = previousCpuInfo[i].times;
+        totalActive += (cpu.user - prevCpu.user) + (cpu.sys - prevCpu.sys) + (cpu.irq - prevCpu.irq);
+        totalIdle += (cpu.idle - prevCpu.idle);
+    }
+    previousCpuInfo = cpus;
+
+    const total = totalActive + totalIdle;
+    const cpuUsage = total === 0 ? 0 : (totalActive / total) * 100;
+    
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
+    const usedMem = totalMem - freeMem;
+    const ramUsage = (usedMem / totalMem) * 100;
+
+    return { cpu: cpuUsage, ram: ramUsage };
+});
+
+// --- Password Leak Check (Have I Been Pwned API) ---
+ipcMain.handle('check-password-leak', async (event, password) => {
+    return new Promise((resolve) => {
+        const hash = crypto.createHash('sha1').update(password).digest('hex').toUpperCase();
+        const prefix = hash.slice(0, 5);
+        const suffix = hash.slice(5);
+
+        https.get(`https://api.pwnedpasswords.com/range/${prefix}`, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                if (res.statusCode !== 200) {
+                    return resolve({ success: false, error: 'API Error: ' + res.statusCode });
+                }
+                const lines = data.split('\n');
+                let found = false;
+                let count = 0;
+                for (const line of lines) {
+                    const parts = line.split(':');
+                    if (parts[0] === suffix) {
+                        found = true;
+                        count = parseInt(parts[1].trim(), 10);
+                        break;
+                    }
+                }
+                resolve({ success: true, leaked: found, count });
+            });
+        }).on('error', (err) => {
+            resolve({ success: false, error: err.message });
+        });
+    });
 });
 
 // --- Network Diagnostics Module (Ping / Interface Enumeration) ---

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberSec Dashboard</title>
+    <title>CyberShield</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -14,7 +15,7 @@
         <nav class="sidebar glass-panel">
             <div class="brand">
                 <i class="fa-solid fa-shield-halved brand-icon"></i>
-                <h2>CyberSec<span>Dash</span></h2>
+                <h2>Cyber<span>Shield</span></h2>
             </div>
             <ul class="nav-links">
                 <li class="active" data-target="dashboard-home">
@@ -44,8 +45,8 @@
             <!-- Home Section -->
             <section id="dashboard-home" class="tool-section active glass-panel">
                 <header class="section-header">
-                    <h1>Welcome to CyberSec Dashboard</h1>
-                    <p>Your all-in-one personal cybersecurity toolkit.</p>
+                    <h1>Welcome to CyberShield</h1>
+                    <p>Personal Security Monitoring System.</p>
                 </header>
                 <div class="cards-grid">
                     <div class="feature-card" onclick="document.querySelector('[data-target=\'password-checker\']').click()">
@@ -74,13 +75,16 @@
                         <p>Encrypt and decrypt sensitive text securely.</p>
                     </div>
                 </div>
+                <div class="chart-container">
+                    <canvas id="liveSystemChart"></canvas>
+                </div>
             </section>
 
             <!-- Password Checker Section -->
             <section id="password-checker" class="tool-section glass-panel hidden">
                 <header class="section-header">
-                    <h1>Password Strength Checker</h1>
-                    <p>Enter a password to evaluate its resilience against brute-force and dictionary attacks.</p>
+                    <h1>Password Strength & Leak Checker</h1>
+                    <p>Evaluate resilience and securely check if the password has been exposed in known breaches (via k-anonymity).</p>
                 </header>
                 <div class="tool-body">
                     <div class="input-group">
@@ -93,6 +97,7 @@
                     <div class="results" id="pwd-results">
                         <h3 id="pwd-status">Strength: None</h3>
                         <ul id="pwd-feedback" class="feedback-list"></ul>
+                        <div id="pwd-leak-status" style="margin-top: 15px;"></div>
                     </div>
                 </div>
             </section>
@@ -100,10 +105,13 @@
             <!-- File Hash Checker Section -->
             <section id="file-hasher" class="tool-section glass-panel hidden">
                 <header class="section-header">
-                    <h1>File Hash Checker</h1>
-                    <p>Select a file to generate its cryptographic hashes locally (no data is uploaded).</p>
+                    <h1>File Integrity Monitor</h1>
+                    <p>Select a file to generate its cryptographic hashes locally and compare against expected values.</p>
                 </header>
                 <div class="tool-body">
+                    <div class="input-group" style="margin-bottom: 15px;">
+                        <input type="text" id="expected-hash" placeholder="Expected Hash (SHA-256 or MD5) [Optional]" autocomplete="off">
+                    </div>
                     <div class="file-drop-area" id="file-drop-area">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <p>Drag & Drop a file here or <span>Browse</span></p>
@@ -112,6 +120,7 @@
                     <div class="results hidden" id="hash-results">
                         <div class="file-info">
                             <strong>File:</strong> <span id="hash-filename"></span> (<span id="hash-filesize"></span>)
+                            <div id="hash-match-status" style="margin-top: 10px;"></div>
                         </div>
                         <div class="hash-output">
                             <label>SHA-256</label>

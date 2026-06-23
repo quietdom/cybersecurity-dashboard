@@ -1,50 +1,70 @@
-# Personal Cybersecurity Dashboard
+# CyberShield – Personal Security Monitoring System
 
-A robust, cross-platform desktop application built with Electron and Node.js that provides a centralized suite of essential cybersecurity utilities.
+<div align="center">
+  <img src="https://img.shields.io/badge/Status-Active-success.svg" alt="Status">
+  <img src="https://img.shields.io/badge/Platform-Desktop_(Electron)-blue.svg" alt="Platform">
+  <img src="https://img.shields.io/badge/Security-AES--256--GCM-critical.svg" alt="Security">
+</div>
 
-## Technical Architecture
+<br/>
 
-*   **Frontend Environment**: HTML5, CSS3 (Custom ImGui-inspired responsive dark theme), and Vanilla JavaScript.
-*   **Backend Environment**: Node.js integrated via Electron.
-*   **Security Architecture**: Employs Inter-Process Communication (IPC) via `contextBridge` to securely isolate the Chromium rendering engine from raw Node.js system APIs, ensuring a secure desktop environment.
+**CyberShield** is a comprehensive, cross-platform desktop application built with Electron and Node.js. It provides a centralized suite of essential cybersecurity utilities packaged in a premium, live-updating dashboard environment.
 
-## Core Modules and Implementation
+## 🎯 Purpose & Vision
+CyberShield was developed to demonstrate the practical application of systems-level programming and applied cryptography in a modern JavaScript/Node.js stack. By bypassing browser restrictions via Electron's IPC bridge, the application securely interacts directly with the host operating system to provide real-time monitoring and cryptographic integrity checks.
 
-### 1. Cryptographic File Integrity Check
-Utilizes Node.js native `crypto` module (`crypto.createHash`) combined with `fs.readFileSync`. This architectural decision bypasses browser memory limitations and streams data directly from the OS, allowing for rapid calculation of **SHA-256**, **SHA-1**, and **MD5** hashes even on very large files without crashing the rendering process.
+---
 
-### 2. Network Diagnostics Engine
-Leverages the Node.js `child_process` module to interface directly with the host operating system's networking utilities. This allows the application to execute system-level ICMP ping requests and enumerate local network interfaces (`os.networkInterfaces()`) in a way that standard web browsers restrict due to CORS and mixed-content policies.
+## 📸 Screenshots
 
-### 3. Authenticated AES-256-GCM Encryption
-Implements symmetric encryption using the Galois/Counter Mode (GCM), which provides both data confidentiality and authenticity. 
-*   **Key Derivation**: Keys are derived securely using `crypto.pbkdf2Sync` with randomized salts and a high iteration count (100,000 iterations) to defend against dictionary attacks.
-*   **Initialization Vectors**: Uses cryptographically secure random IVs for every encryption operation.
+> *[Insert a high-quality screenshot of the Main Dashboard showing the Live CPU/RAM graph]*
+>
+> *[Insert a screenshot of the File Integrity Monitor analyzing a file]*
 
-### 4. Password Entropy & URL Heuristics
-*   **Password Module**: Statically evaluates password strength based on length, character set diversity (uppercase, lowercase, numerical, symbols), and common predictability patterns.
-*   **URL Module**: Performs static heuristic analysis on uniform resource locators to detect insecure protocols (HTTP over HTTPS), IP-based hostnames, and malformed structures indicative of phishing attempts.
+---
 
-## Installation & Usage
+## 🎥 Demo Video
+
+> **Watch CyberShield in action:**
+> 
+> *[Insert link to YouTube demo or attach a `.gif` of the application running here]*
+
+---
+
+## 🚀 Key Features
+
+*   **📊 Live System Telemetry**: Utilizes the Node.js `os` module and `Chart.js` to render a beautiful, real-time scrolling graph of your machine's CPU and RAM usage.
+*   **🔐 Password Leak Checker (k-anonymity)**: Evaluates password entropy and securely checks the *Have I Been Pwned* API by hashing the password locally (SHA-1) and only transmitting the first 5 characters (k-anonymity model) to ensure absolute cryptographic privacy.
+*   **🛡️ File Integrity Monitor**: Bypasses browser memory limitations by utilizing native `crypto.createHash` streams. Rapidly calculates SHA-256, SHA-1, and MD5 hashes and allows for expected-hash comparison with visual Red/Green tamper alerts.
+*   **📡 Network Diagnostics Engine**: Interfaces directly with the OS `child_process` to execute local ICMP ping sweeps and enumerate network interfaces (`os.networkInterfaces()`).
+*   **🔒 Authenticated AES-256-GCM Encryption**: Implements symmetric encryption (Galois/Counter Mode) with secure key derivation (`pbkdf2Sync` with 100,000 iterations) and cryptographically secure random IVs.
+*   **🚨 Alert System**: Features a globally integrated Red (Critical), Yellow (Warning), and Green (Secure) badge alerting system across all modules.
+
+---
+
+## 🛠️ Installation & Usage (How to Run)
+
+Because this is a modern Node.js application, the industry standard `package.json` replaces legacy `requirements.txt` files.
 
 ### Prerequisites
-*   Node.js (v16.x or higher recommended)
-*   npm
+*   [Node.js](https://nodejs.org/) (v16.x or higher)
+*   npm (Node Package Manager)
 
-### Setup
+### Setup Instructions
+
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/quietdom/cybersecurity-dashboard
 
-# Navigate into the project directory
+# 2. Navigate into the project directory
 cd cybersecurity-dashboard
 
-# Install Electron and dependencies
+# 3. Install all dependencies (Electron, Chart.js, etc.)
 npm install
 
-# Launch the application
+# 4. Launch the application
 npm start
 ```
 
----
-*Developed as a demonstration of applying full-stack JavaScript and Node.js to systems-level programming and applied cryptography.*
+## 🔒 Security Architecture
+CyberShield employs strict Inter-Process Communication (IPC) via Electron's `contextBridge` to securely isolate the Chromium rendering engine from raw Node.js system APIs, ensuring a secure desktop environment resistant to cross-site scripting (XSS) payload escalation.

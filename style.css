@@ -387,6 +387,33 @@ button.primary-btn:hover {
     color: var(--accent-primary);
 }
 
+/* Badges for Alert System */
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-left: 10px;
+}
+
+.badge-safe { background: rgba(0,255,65,0.2); color: var(--text-safe); border: 1px solid var(--text-safe); }
+.badge-warn { background: rgba(255,170,0,0.2); color: var(--text-warn); border: 1px solid var(--text-warn); }
+.badge-alert { background: rgba(255,51,51,0.2); color: var(--text-alert); border: 1px solid var(--text-alert); }
+
+/* Chart Container */
+.chart-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 30px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    padding: 15px;
+}
+
 /* Alerts & Info */
 .alert {
     padding: 10px 15px;
