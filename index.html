@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar glass-panel">
+            <div class="brand">
+                <i class="fa-solid fa-shield-halved brand-icon"></i>
+                <h2>CyberSec<span>Dash</span></h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active" data-target="dashboard-home">
+                    <i class="fa-solid fa-house"></i> Home
+                </li>
+                <li data-target="password-checker">
+                    <i class="fa-solid fa-key"></i> Password Checker
+                </li>
+                <li data-target="file-hasher">
+                    <i class="fa-solid fa-file-shield"></i> File Hash Checker
+                </li>
+                <li data-target="url-checker">
+                    <i class="fa-solid fa-link"></i> URL Safety Checker
+                </li>
+                <li data-target="network-scanner">
+                    <i class="fa-solid fa-network-wired"></i> Network Info
+                </li>
+                <li data-target="encryption-tool">
+                    <i class="fa-solid fa-lock"></i> Encryption Tool
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            
+            <!-- Home Section -->
+            <section id="dashboard-home" class="tool-section active glass-panel">
+                <header class="section-header">
+                    <h1>Welcome to CyberSec Dashboard</h1>
+                    <p>Your all-in-one personal cybersecurity toolkit.</p>
+                </header>
+                <div class="cards-grid">
+                    <div class="feature-card" onclick="document.querySelector('[data-target=\'password-checker\']').click()">
+                        <i class="fa-solid fa-key"></i>
+                        <h3>Password Checker</h3>
+                        <p>Analyze the strength and vulnerability of your passwords.</p>
+                    </div>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=\'file-hasher\']').click()">
+                        <i class="fa-solid fa-file-shield"></i>
+                        <h3>File Hash Checker</h3>
+                        <p>Verify file integrity securely within your browser.</p>
+                    </div>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=\'url-checker\']').click()">
+                        <i class="fa-solid fa-link"></i>
+                        <h3>URL Safety</h3>
+                        <p>Analyze links for potential phishing or malicious intent.</p>
+                    </div>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=\'network-scanner\']').click()">
+                        <i class="fa-solid fa-network-wired"></i>
+                        <h3>Network Info</h3>
+                        <p>Check your public footprint and network configuration.</p>
+                    </div>
+                    <div class="feature-card" onclick="document.querySelector('[data-target=\'encryption-tool\']').click()">
+                        <i class="fa-solid fa-lock"></i>
+                        <h3>Encryption Tool</h3>
+                        <p>Encrypt and decrypt sensitive text securely.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Password Checker Section -->
+            <section id="password-checker" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>Password Strength Checker</h1>
+                    <p>Enter a password to evaluate its resilience against brute-force and dictionary attacks.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="input-group">
+                        <input type="password" id="pwd-input" placeholder="Enter your password..." autocomplete="off">
+                        <button id="toggle-pwd-visibility" class="icon-btn"><i class="fa-solid fa-eye"></i></button>
+                    </div>
+                    <div class="strength-meter-container">
+                        <div class="strength-bar" id="pwd-strength-bar"></div>
+                    </div>
+                    <div class="results" id="pwd-results">
+                        <h3 id="pwd-status">Strength: None</h3>
+                        <ul id="pwd-feedback" class="feedback-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- File Hash Checker Section -->
+            <section id="file-hasher" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>File Hash Checker</h1>
+                    <p>Select a file to generate its cryptographic hashes locally (no data is uploaded).</p>
+                </header>
+                <div class="tool-body">
+                    <div class="file-drop-area" id="file-drop-area">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Drag & Drop a file here or <span>Browse</span></p>
+                        <input type="file" id="file-input" class="hidden-input">
+                    </div>
+                    <div class="results hidden" id="hash-results">
+                        <div class="file-info">
+                            <strong>File:</strong> <span id="hash-filename"></span> (<span id="hash-filesize"></span>)
+                        </div>
+                        <div class="hash-output">
+                            <label>SHA-256</label>
+                            <div class="hash-value-container">
+                                <code id="hash-sha256" class="hash-code">Calculating...</code>
+                                <button class="copy-btn" data-copy-target="hash-sha256"><i class="fa-solid fa-copy"></i></button>
+                            </div>
+                        </div>
+                         <div class="hash-output">
+                            <label>SHA-1</label>
+                            <div class="hash-value-container">
+                                <code id="hash-sha1" class="hash-code">Calculating...</code>
+                                <button class="copy-btn" data-copy-target="hash-sha1"><i class="fa-solid fa-copy"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- URL Safety Checker Section -->
+            <section id="url-checker" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>URL Safety Checker</h1>
+                    <p>Heuristic analysis to determine if a link might be suspicious.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="input-group">
+                        <input type="url" id="url-input" placeholder="https://example.com/login" autocomplete="off">
+                        <button id="btn-check-url" class="primary-btn">Analyze</button>
+                    </div>
+                    <div class="results hidden" id="url-results">
+                        <div class="score-ring-container">
+                            <div class="score-ring" id="url-score-ring">
+                                <span id="url-score-text">0/10</span>
+                            </div>
+                        </div>
+                        <h3 id="url-status" class="text-center">Safe</h3>
+                        <ul id="url-feedback" class="feedback-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Network Info Section -->
+            <section id="network-scanner" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>Network Information</h1>
+                    <p>View your public network footprint and browser details.</p>
+                    <div class="alert alert-info">
+                        <i class="fa-solid fa-circle-info"></i> Browser security prevents direct local network scanning. Displaying public and environment info.
+                    </div>
+                </header>
+                <div class="tool-body">
+                    <button id="btn-fetch-network" class="primary-btn">Fetch My Information</button>
+                    <div class="results hidden" id="network-results">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <label>Public IP Address</label>
+                                <span id="net-ip">Loading...</span>
+                            </div>
+                            <div class="info-box">
+                                <label>ISP / Organization</label>
+                                <span id="net-isp">Loading...</span>
+                            </div>
+                            <div class="info-box">
+                                <label>Location</label>
+                                <span id="net-location">Loading...</span>
+                            </div>
+                            <div class="info-box">
+                                <label>User Agent</label>
+                                <span id="net-ua">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Encryption Tool Section -->
+            <section id="encryption-tool" class="tool-section glass-panel hidden">
+                <header class="section-header">
+                    <h1>Secure Text Encryption</h1>
+                    <p>Encrypt and decrypt messages using AES-GCM encryption entirely within your browser.</p>
+                </header>
+                <div class="tool-body">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-enc-tab="encrypt">Encrypt</button>
+                        <button class="tab-btn" data-enc-tab="decrypt">Decrypt</button>
+                    </div>
+                    <div class="tab-content" id="enc-encrypt-tab">
+                        <div class="input-group">
+                            <textarea id="enc-input-text" placeholder="Enter text to encrypt..." rows="4"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="enc-password" placeholder="Encryption Password">
+                        </div>
+                        <button id="btn-encrypt" class="primary-btn">Encrypt Message</button>
+                    </div>
+                    
+                    <div class="tab-content hidden" id="enc-decrypt-tab">
+                        <div class="input-group">
+                            <textarea id="dec-input-text" placeholder="Enter ciphertext here..." rows="4"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="dec-password" placeholder="Decryption Password">
+                        </div>
+                        <button id="btn-decrypt" class="primary-btn">Decrypt Message</button>
+                    </div>
+
+                    <div class="results hidden" id="crypto-results">
+                        <label id="crypto-result-label">Result</label>
+                        <div class="hash-value-container">
+                            <code id="crypto-output" class="hash-code"></code>
+                            <button class="copy-btn" data-copy-target="crypto-output"><i class="fa-solid fa-copy"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
