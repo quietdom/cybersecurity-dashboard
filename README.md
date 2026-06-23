@@ -34,7 +34,7 @@ Implements symmetric encryption using the Galois/Counter Mode (GCM), which provi
 ### Setup
 ```bash
 # Clone the repository
-git clone <your-repo-url>
+git clone https://github.com/quietdom/cybersecurity-dashboard
 
 # Navigate into the project directory
 cd cybersecurity-dashboard
